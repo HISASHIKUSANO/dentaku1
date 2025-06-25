@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌈 NEON CALCULATOR 🌈</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(45deg, #ff0080, #ff8c00, #40e0d0, #ee82ee, #ff1493, #00bfff);
+            background-size: 300% 300%;
+            animation: rainbowGradient 3s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        @keyframes rainbowGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .calculator {
+            background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 
+                0 0 50px rgba(255, 0, 128, 0.8),
+                0 0 100px rgba(64, 224, 208, 0.6),
+                0 20px 40px rgba(0, 0, 0, 0.8),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            width: 320px;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+            animation: calculatorGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes calculatorGlow {
+            0% { 
+                box-shadow: 
+                    0 0 30px rgba(255, 0, 128, 0.8),
+                    0 0 60px rgba(64, 224, 208, 0.6),
+                    0 20px 40px rgba(0, 0, 0, 0.8),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            }
+            100% { 
+                box-shadow: 
+                    0 0 50px rgba(255, 0, 128, 1),
+                    0 0 100px rgba(64, 224, 208, 0.8),
+                    0 20px 40px rgba(0, 0, 0, 0.8),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            }
+        }
+
+        .display {
+            background: linear-gradient(135deg, #000000, #1a1a1a);
+            color: #fff;
+            font-size: 48px;
+            font-weight: 300;
+            text-align: right;
+            padding: 30px 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            min-height: 100px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end;
+            overflow: hidden;
+            word-break: break-all;
+            border: 2px solid #333;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 255, 0.5),
+                inset 0 0 20px rgba(0, 255, 255, 0.1);
+            text-shadow: 
+                0 0 10px #00ffff,
+                0 0 20px #00ffff,
+                0 0 30px #00ffff;
+            animation: displayPulse 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes displayPulse {
+            0% { 
+                text-shadow: 
+                    0 0 5px #00ffff,
+                    0 0 10px #00ffff,
+                    0 0 15px #00ffff;
+            }
+            100% { 
+                text-shadow: 
+                    0 0 10px #00ffff,
+                    0 0 20px #00ffff,
+                    0 0 30px #00ffff,
+                    0 0 40px #00ffff;
+            }
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 50px;
+            font-size: 32px;
+            font-weight: 400;
+            height: 70px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            text-shadow: 0 0 10px currentColor;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s;
+            opacity: 0;
+        }
+
+        .btn:hover::before {
+            animation: shine 0.6s ease-in-out;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); opacity: 0; }
+        }
+
+        .btn:active {
+            transform: scale(0.9) rotateZ(2deg);
+            filter: brightness(1.3);
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            filter: brightness(1.2) saturate(1.3);
+        }
+
+        .btn.number {
+            background: linear-gradient(145deg, #333, #555);
+            color: #fff;
+            border: 2px solid #666;
+            box-shadow: 
+                0 0 15px rgba(100, 149, 237, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .btn.number:hover {
+            background: linear-gradient(145deg, #404040, #606060);
+            box-shadow: 
+                0 0 25px rgba(100, 149, 237, 0.8),
+                0 0 35px rgba(100, 149, 237, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            text-shadow: 
+                0 0 10px #6495ed,
+                0 0 20px #6495ed;
+        }
+
+        .btn.operator {
+            background: linear-gradient(145deg, #ff9500, #ff6b00);
+            color: #fff;
+            border: 2px solid #ffad33;
+            box-shadow: 
+                0 0 20px rgba(255, 149, 0, 0.7),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            animation: operatorGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes operatorGlow {
+            0% { 
+                box-shadow: 
+                    0 0 15px rgba(255, 149, 0, 0.7),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            }
+            100% { 
+                box-shadow: 
+                    0 0 30px rgba(255, 149, 0, 1),
+                    0 0 40px rgba(255, 149, 0, 0.5),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            }
+        }
+
+        .btn.operator:hover {
+            background: linear-gradient(145deg, #ffad33, #ff8c00);
+            box-shadow: 
+                0 0 35px rgba(255, 149, 0, 1),
+                0 0 50px rgba(255, 149, 0, 0.7),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            text-shadow: 
+                0 0 15px #ff9500,
+                0 0 25px #ff9500;
+        }
+
+        .btn.operator.active {
+            background: linear-gradient(145deg, #fff, #f0f0f0);
+            color: #ff9500;
+            box-shadow: 
+                0 0 30px rgba(255, 149, 0, 1),
+                0 0 50px rgba(255, 149, 0, 0.8),
+                inset 0 0 20px rgba(255, 149, 0, 0.2);
+            text-shadow: 
+                0 0 15px #ff9500,
+                0 0 25px #ff9500,
+                0 0 35px #ff9500;
+        }
+
+        .btn.function {
+            background: linear-gradient(145deg, #a6a6a6, #888);
+            color: #000;
+            border: 2px solid #ccc;
+            box-shadow: 
+                0 0 15px rgba(255, 255, 255, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            text-shadow: 0 0 5px #fff;
+        }
+
+        .btn.function:hover {
+            background: linear-gradient(145deg, #b8b8b8, #999);
+            box-shadow: 
+                0 0 25px rgba(255, 255, 255, 0.8),
+                0 0 35px rgba(255, 255, 255, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            text-shadow: 
+                0 0 10px #fff,
+                0 0 15px #fff;
+        }
+
+        .btn.zero {
+            grid-column: span 2;
+            justify-content: flex-start;
+            padding-left: 25px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 0, 255, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 255, 255, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(255, 255, 0, 0.3) 0%, transparent 50%);
+            animation: sparkle 4s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.7; }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <div class="buttons">
+            <button class="btn function" onclick="clearAll()">AC</button>
+            <button class="btn function" onclick="clearEntry()">C</button>
+            <button class="btn function" onclick="toggleSign()">±</button>
+            <button class="btn operator" onclick="setOperator('÷')">÷</button>
+            
+            <button class="btn number" onclick="inputNumber('7')">7</button>
+            <button class="btn number" onclick="inputNumber('8')">8</button>
+            <button class="btn number" onclick="inputNumber('9')">9</button>
+            <button class="btn operator" onclick="setOperator('×')">×</button>
+            
+            <button class="btn number" onclick="inputNumber('4')">4</button>
+            <button class="btn number" onclick="inputNumber('5')">5</button>
+            <button class="btn number" onclick="inputNumber('6')">6</button>
+            <button class="btn operator" onclick="setOperator('-')">-</button>
+            
+            <button class="btn number" onclick="inputNumber('1')">1</button>
+            <button class="btn number" onclick="inputNumber('2')">2</button>
+            <button class="btn number" onclick="inputNumber('3')">3</button>
+            <button class="btn operator" onclick="setOperator('+')">+</button>
+            
+            <button class="btn number zero" onclick="inputNumber('0')">0</button>
+            <button class="btn number" onclick="inputDecimal()">.</button>
+            <button class="btn operator" onclick="calculate()">=</button>
+        </div>
+    </div>
+
+    <script>
+        let display = document.getElementById('display');
+        let currentNumber = '0';
+        let previousNumber = null;
+        let operator = null;
+        let waitingForOperand = false;
+
+        function updateDisplay() {
+            display.textContent = currentNumber;
+        }
+
+        function inputNumber(num) {
+            if (waitingForOperand) {
+                currentNumber = num;
+                waitingForOperand = false;
+            } else {
+                currentNumber = currentNumber === '0' ? num : currentNumber + num;
+            }
+            updateDisplay();
+        }
+
+        function inputDecimal() {
+            if (waitingForOperand) {
+                currentNumber = '0.';
+                waitingForOperand = false;
+            } else if (currentNumber.indexOf('.') === -1) {
+                currentNumber += '.';
+            }
+            updateDisplay();
+        }
+
+        function clearAll() {
+            currentNumber = '0';
+            previousNumber = null;
+            operator = null;
+            waitingForOperand = false;
+            clearOperatorButtons();
+            updateDisplay();
+        }
+
+        function clearEntry() {
+            currentNumber = '0';
+            updateDisplay();
+        }
+
+        function toggleSign() {
+            if (currentNumber !== '0') {
+                currentNumber = currentNumber.charAt(0) === '-' 
+                    ? currentNumber.slice(1) 
+                    : '-' + currentNumber;
+                updateDisplay();
+            }
+        }
+
+        function setOperator(nextOperator) {
+            let inputValue = parseFloat(currentNumber);
+
+            if (previousNumber === null) {
+                previousNumber = inputValue;
+            } else if (operator) {
+                let currentValue = previousNumber || 0;
+                let newValue = performCalculation(currentValue, inputValue, operator);
+
+                currentNumber = String(newValue);
+                previousNumber = newValue;
+                updateDisplay();
+            }
+
+            waitingForOperand = true;
+            operator = nextOperator;
+            updateOperatorButtons(nextOperator);
+        }
+
+        function calculate() {
+            let inputValue = parseFloat(currentNumber);
+
+            if (previousNumber !== null && operator) {
+                let newValue = performCalculation(previousNumber, inputValue, operator);
+                currentNumber = String(newValue);
+                previousNumber = null;
+                operator = null;
+                waitingForOperand = true;
+                clearOperatorButtons();
+                updateDisplay();
+            }
+        }
+
+        function performCalculation(firstOperand, secondOperand, operator) {
+            switch (operator) {
+                case '+':
+                    return firstOperand + secondOperand;
+                case '-':
+                    return firstOperand - secondOperand;
+                case '×':
+                    return firstOperand * secondOperand;
+                case '÷':
+                    return secondOperand !== 0 ? firstOperand / secondOperand : 0;
+                default:
+                    return secondOperand;
+            }
+        }
+
+        function updateOperatorButtons(activeOperator) {
+            clearOperatorButtons();
+            let operators = document.querySelectorAll('.btn.operator');
+            operators.forEach(btn => {
+                if (btn.textContent === activeOperator) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        function clearOperatorButtons() {
+            let operators = document.querySelectorAll('.btn.operator');
+            operators.forEach(btn => {
+                btn.classList.remove('active');
+            });
+        }
+
+        // キーボードサポート
+        document.addEventListener('keydown', function(event) {
+            const key = event.key;
+            
+            if (key >= '0' && key <= '9') {
+                inputNumber(key);
+            } else if (key === '.') {
+                inputDecimal();
+            } else if (key === '+') {
+                setOperator('+');
+            } else if (key === '-') {
+                setOperator('-');
+            } else if (key === '*') {
+                setOperator('×');
+            } else if (key === '/') {
+                event.preventDefault();
+                setOperator('÷');
+            } else if (key === 'Enter' || key === '=') {
+                calculate();
+            } else if (key === 'Escape') {
+                clearAll();
+            } else if (key === 'Backspace') {
+                clearEntry();
+            }
+        });
+    </script>
+</body>
+</html>
